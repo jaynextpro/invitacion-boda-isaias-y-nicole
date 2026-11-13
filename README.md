@@ -115,7 +115,7 @@ Google Calendar link, in case the guest dismissed the first one.
 
 ## 4. Deploy on AWS Ubuntu with nginx
 
-Live URL: `https://my-brand.com/live-projects/letters/invitacion-boda-isaias-y-nicole/`
+Live URL: `https://hsoul.ink/live-projects/letters/invitacion-boda-isaias-y-nicole/`
 
 The site is static: nginx just serves files, so nothing (Node, Python…) runs on
 the server. Only `index.html`, `css/`, `js/` and `assets/` are uploaded (~4.6 MB).
@@ -124,7 +124,7 @@ the server. Only `index.html`, `css/`, `js/` and `assets/` are uploaded (~4.6 MB
 **Folder layout on the server mirrors the URL**, which keeps nginx simple:
 
 ```
-/var/www/my-brand/                                   ← root of my-brand.com
+/var/www/hsoul-ink/                                   ← root of hsoul.ink
 └── live-projects/letters/invitacion-boda-isaias-y-nicole/
     ├── index.html   css/   js/   assets/
 ```
@@ -133,7 +133,7 @@ the server. Only `index.html`, `css/`, `js/` and `assets/` are uploaded (~4.6 MB
 
 1. **AWS security group**: allow inbound TCP 80 and 443 from anywhere, and 22 from your IP.
 2. **Elastic IP** on the instance, so its address survives stop/start, and a DNS
-   **A record** `my-brand.com` (and `www`) pointing to it.
+   **A record** `hsoul.ink` (and `www`) pointing to it.
 3. On the server:
    ```bash
    sudo apt update && sudo apt install -y nginx rsync
@@ -146,9 +146,9 @@ the server. Only `index.html`, `css/`, `js/` and `assets/` are uploaded (~4.6 MB
 From the project folder on your computer (macOS/Linux, or WSL on Windows):
 
 ```bash
-deploy/deploy.sh ubuntu@my-brand.com
+deploy/deploy.sh ubuntu@hsoul.ink
 # with a .pem key from AWS:
-SSH_KEY=~/.ssh/aws.pem deploy/deploy.sh ubuntu@my-brand.com
+SSH_KEY=~/.ssh/aws.pem deploy/deploy.sh ubuntu@hsoul.ink
 ```
 
 What it does: it creates the folder above once (owned by your login user, which
@@ -161,26 +161,26 @@ changed files travel, and files deleted locally are deleted on the server.
 Copy the snippet to the server:
 
 ```bash
-scp deploy/nginx-invitacion.conf ubuntu@my-brand.com:/tmp/
-ssh ubuntu@my-brand.com 'sudo mv /tmp/nginx-invitacion.conf /etc/nginx/snippets/invitacion-boda.conf'
+scp deploy/nginx-invitacion.conf ubuntu@hsoul.ink:/tmp/
+ssh ubuntu@hsoul.ink 'sudo mv /tmp/nginx-invitacion.conf /etc/nginx/snippets/invitacion-boda.conf'
 ```
 
-Then include it **inside** the `server { }` block of my-brand.com (usually
-`/etc/nginx/sites-available/my-brand` or `default`):
+Then include it **inside** the `server { }` block of hsoul.ink (usually
+`/etc/nginx/sites-available/hsoul-ink` or `default`):
 
 ```nginx
 server {
-    server_name my-brand.com www.my-brand.com;
-    root /var/www/my-brand;
+    server_name hsoul.ink www.hsoul.ink;
+    root /var/www/hsoul-ink;
     # … what you already have …
 
     include snippets/invitacion-boda.conf;
 }
 ```
 
-No server block for my-brand.com yet? Create `/etc/nginx/sites-available/my-brand`
+No server block for hsoul.ink yet? Create `/etc/nginx/sites-available/hsoul-ink`
 with the block above plus `listen 80; listen [::]:80;`, then
-`sudo ln -s /etc/nginx/sites-available/my-brand /etc/nginx/sites-enabled/` and
+`sudo ln -s /etc/nginx/sites-available/hsoul-ink /etc/nginx/sites-enabled/` and
 `sudo rm /etc/nginx/sites-enabled/default`.
 
 Apply. Testing first means a typo never takes the running site down:
@@ -194,7 +194,7 @@ What the snippet does, and why:
 | rule | why |
 |---|---|
 | `…isaias-y-nicole` → 301 → `…isaias-y-nicole/` | the page uses relative links (`css/…`, `assets/…`); without the final `/` the browser would look for them one folder up and the page would load unstyled |
-| `root /var/www/my-brand` + `try_files` | serve the files; anything missing is a clean 404 |
+| `root /var/www/hsoul-ink` + `try_files` | serve the files; anything missing is a clean 404 |
 | gzip for CSS/JS | `css/fonts.css` holds the embedded script font: 64 KB → 48 KB |
 | HTML/CSS/JS `Cache-Control: no-cache` | file names don't change between updates, so browsers revalidate (a cheap 304) and guests always get the latest version |
 | images/song cached 1 day | they rarely change; after replacing one, guests see it within a day (or on a hard refresh) |
@@ -206,7 +206,7 @@ The song supports seeking out of the box: nginx answers byte-range requests for 
 
 ```bash
 sudo apt install -y certbot python3-certbot-nginx
-sudo certbot --nginx -d my-brand.com -d www.my-brand.com
+sudo certbot --nginx -d hsoul.ink -d www.hsoul.ink
 ```
 
 Certbot adds the 443 server and the http→https redirect to your config and renews the
@@ -216,9 +216,9 @@ the RSVP request to Google and the "add to calendar" download all expect a secur
 ### 4.5 Check it
 
 ```bash
-curl -I https://my-brand.com/live-projects/letters/invitacion-boda-isaias-y-nicole     # 301 → …/
-curl -I https://my-brand.com/live-projects/letters/invitacion-boda-isaias-y-nicole/    # 200, text/html
-curl -I https://my-brand.com/live-projects/letters/invitacion-boda-isaias-y-nicole/assets/img/og.jpg   # 200
+curl -I https://hsoul.ink/live-projects/letters/invitacion-boda-isaias-y-nicole     # 301 → …/
+curl -I https://hsoul.ink/live-projects/letters/invitacion-boda-isaias-y-nicole/    # 200, text/html
+curl -I https://hsoul.ink/live-projects/letters/invitacion-boda-isaias-y-nicole/assets/img/og.jpg   # 200
 ```
 
 Then open the URL on a phone, and paste it into Facebook's Sharing Debugger
@@ -231,7 +231,7 @@ The path appears in three places. Change all three together:
 
 1. `SITE_URL` in `tools/build_assets.py` (link previews), then rebuild. Without a
    rebuild, patch the built page directly:
-   `sed -i 's#https://my-brand.com/live-projects/letters/invitacion-boda-isaias-y-nicole/#https://NEW-URL/#g' index.html`
+   `sed -i 's#https://hsoul.ink/live-projects/letters/invitacion-boda-isaias-y-nicole/#https://NEW-URL/#g' index.html`
 2. The two `location` paths in `deploy/nginx-invitacion.conf` (plus `root` if the folder moves).
 3. `REMOTE_DIR` in `deploy/deploy.sh` (or run `REMOTE_DIR=/new/path deploy/deploy.sh …`).
 
@@ -242,7 +242,7 @@ Nothing else depends on the path: all links inside the page are relative.
 | symptom | cause / fix |
 |---|---|
 | page shows unstyled / images missing | opened without the final `/` and the redirect isn't active: the snippet isn't included in the right `server` block, or nginx wasn't reloaded |
-| 404 | files aren't at `/var/www/my-brand/live-projects/letters/invitacion-boda-isaias-y-nicole/index.html`, or `root` differs |
+| 404 | files aren't at `/var/www/hsoul-ink/live-projects/letters/invitacion-boda-isaias-y-nicole/index.html`, or `root` differs |
 | 403 | permissions (re-run deploy.sh) or the URL hits a denied folder |
 | your site-wide security headers vanished on this page | nginx drops inherited `add_header` lines inside a location that sets its own: copy them into the snippet's locations |
 | old version still showing | images are cached for a day: hard refresh, or rename the file |

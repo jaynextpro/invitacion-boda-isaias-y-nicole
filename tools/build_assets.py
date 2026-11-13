@@ -117,7 +117,7 @@ ALT = {
 
 # ---- Where the site lives (used for link previews: WhatsApp, Facebook…) ----
 # Must end with "/". Changing it later without a rebuild: see README → Deploy.
-SITE_URL = "https://my-brand.com/live-projects/letters/invitacion-boda-isaias-y-nicole/"
+SITE_URL = "https://hsoul.ink/live-projects/letters/invitacion-boda-isaias-y-nicole/"
 
 # ---- Client photos (design/ folder) -----------------------------------------
 DESIGN = ROOT / "design"
