@@ -57,21 +57,41 @@ music starts there. The record spins only while the song is playing.
 
 ## 2. Collect RSVPs in a Google Sheet (free)
 
-1. Create a Google Sheet with headers in row 1: `fecha | nombre | asistencia`.
-2. Extensions → Apps Script, paste:
+The page sends each answer to a small Google Apps Script, which appends a row
+(`fecha | nombre | asistencia`) to your sheet. The script is in
+`deploy/google-apps-script.gs`.
 
-```js
-function doPost(e) {
-  const data = JSON.parse(e.postData.contents);
-  SpreadsheetApp.getActiveSpreadsheet().getSheets()[0]
-    .appendRow([new Date(), data.nombre, data.asistencia === "si" ? "Sí" : "No"]);
-  return ContentService.createTextOutput(JSON.stringify({ ok: true }))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-```
+1. In the Google Sheet: **Extensions → Apps Script**. Replace everything with the
+   contents of `deploy/google-apps-script.gs`.
+2. Set `SHEET_ID` to the sheet's ID (the part of its URL between `/d/` and `/edit`).
+   This makes the script work whether it was created from the sheet or on its own.
+3. **Deploy → Manage deployments → ✏️ Edit** (or **New deployment** the first time):
+   type **Web app**, *Execute as* **Me**, *Who has access* **Anyone**, *Version* **New version** → **Deploy**.
+   Authorize when Google asks. That lets the script write to *your* sheet.
+4. Copy the **/exec** URL into `rsvpEndpoint` in `js/config.js`.
+   Editing the existing deployment keeps the same URL; a *New deployment* creates a new one.
+5. **Test it**: open the /exec URL in a **private/incognito** window, which is how
+   guests reach it (not logged in). It must show `{"ok":true,"msg":"RSVP listo",…}`.
 
-3. Deploy → New deployment → type **Web app** → Execute as **Me**, Who has access **Anyone** → Deploy.
-4. Copy the `/exec` URL into `rsvpEndpoint` in `js/config.js`.
+How the page sends answers, and why: it loads the /exec URL as a `<script>`
+(`?nombre=…&asistencia=…&callback=…`) instead of using `fetch()`. Browsers apply CORS
+to `fetch()`, and Apps Script replies come through a redirect to another Google domain
+that some browsers and devices block with "has been blocked by CORS policy", even when
+the script is set up correctly. Script loads aren't subject to CORS. The Apps Script replies by
+calling the page back with `{ok:true}` (saved) or `{ok:false,error:"…"}`, so the guest
+only sees "¡Gracias!" when the row is really in the sheet; otherwise they get a retry
+message and the console shows the reason (`[RSVP] …`).
+
+**Troubleshooting (incognito test of the /exec URL):**
+
+| you see | fix |
+|---|---|
+| a Google sign-in page | *Who has access* must be **Anyone** (not "Anyone with a Google account"). Work/school accounts may not offer it; use a personal Gmail account. |
+| `{"ok":false,"error":"No encuentro la hoja…"}` | put the sheet ID in `SHEET_ID`, deploy a **new version** |
+| `{"ok":false,"error":"…openById…"}` | wrong ID, or the deploying account can't open that sheet |
+| "Script function not found: doGet" / old behaviour | code saved but not deployed: Manage deployments → Edit → **New version** |
+| 404 / "unable to open the file" | wrong or archived deployment URL; copy the /exec URL again |
+| `{"ok":true,…}` but the page still fails | `rsvpEndpoint` in `js/config.js` doesn't match that URL (re-deploy the site) |
 
 Until an endpoint is set, answers are only saved in the guest's own browser
 (demo mode). The form closes automatically after `rsvpDeadline`.

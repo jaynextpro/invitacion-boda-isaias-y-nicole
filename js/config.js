@@ -12,7 +12,7 @@ window.INVITE_CONFIG = {
   // Where RSVP answers are sent. Leave "" to only store them in the guest's
   // browser (demo mode). Works with a Google Apps Script web-app URL
   // (see README) or any endpoint accepting a JSON POST.
-  rsvpEndpoint: "",
+  rsvpEndpoint: "https://script.google.com/macros/s/AKfycbzw4weDHYbtbXfi7V8fKp6MVc1KOopL-4YxU6RhJ_aVxL8_bwmmf_VWQA5v1RRxe9075Q/exec",
 
   // "Ver ubicación" button. Paste the share link from Google Maps for an exact pin.
   mapsUrl: "https://maps.app.goo.gl/uHCUtP1yCXaCeUVP9",

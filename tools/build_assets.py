@@ -417,6 +417,13 @@ def main(src):
         crop.putalpha(m); save(crop, name, 90)
     circle_crop(DISC, "disco", 1.2)
     circle_crop(SEAL, "sello", 2.0, gold_only=True)
+    # browser tab icon + iPhone home-screen icon from the gold seal
+    seal = Image.open(IMG / "sello.webp").convert("RGBA"); seal = seal.crop(seal.getchannel("A").getbbox())
+    side = max(seal.size); sq = Image.new("RGBA", (side, side), (0, 0, 0, 0))
+    sq.paste(seal, ((side - seal.width) // 2, (side - seal.height) // 2))
+    sq.resize((48, 48), Image.LANCZOS).save(IMG / "favicon.png")
+    touch = Image.new("RGB", (180, 180), (243, 240, 232)); s150 = sq.resize((150, 150), Image.LANCZOS)
+    touch.paste(s150, (15, 15), s150); touch.save(IMG / "apple-touch-icon.png")
 
     # ---------- live text ----------
     lines = extract_lines(doc[0].get_textpage(), ph, scale)

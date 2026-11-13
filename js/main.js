@@ -232,6 +232,29 @@
     toast(text);
   }
 
+  // Sends the answer to the Apps Script as a <script> request (JSONP). Browsers don't
+  // apply CORS to script loads, so Google's redirects/cross-domain replies can't block
+  // it, unlike fetch(). The script replies by calling our callback with {ok, error}.
+  function sendRsvp(url, r) {
+    return new Promise((resolve, reject) => {
+      const cb = "__rsvp" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+      const q = new URLSearchParams({ nombre: r.nombre, asistencia: r.asistencia, enviado: r.enviado, callback: cb });
+      const tag = document.createElement("script");
+      let timer;
+      const done = () => { clearTimeout(timer); delete window[cb]; tag.remove(); };
+      window[cb] = (data) => { done(); resolve(data); };
+      tag.onerror = () => {
+        done();
+        console.error("[RSVP] The Apps Script could not be loaded. Open the /exec URL in an incognito window: " +
+          "it must show {\"ok\":true}. A sign-in page means the deployment isn't 'Anyone' (README → 2).");
+        reject(new Error("script load failed"));
+      };
+      timer = setTimeout(() => { done(); reject(new Error("timeout")); }, 12000);
+      tag.src = url + (url.includes("?") ? "&" : "?") + q;
+      document.head.appendChild(tag);
+    });
+  }
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const nombre = nameInput.value.trim().replace(/\s+/g, " ");
@@ -246,13 +269,11 @@
     submitBtn.disabled = true;
     try {
       if (C.rsvpEndpoint) {
-        // text/plain avoids a CORS preflight (needed for Google Apps Script)
-        const res = await fetch(C.rsvpEndpoint, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify(respuesta),
-        });
-        if (!res.ok) throw new Error("HTTP " + res.status);
+        const data = await sendRsvp(C.rsvpEndpoint, respuesta);
+        if (!data || data.ok !== true) {
+          console.error("[RSVP] The Apps Script answered but did not save:", data);
+          throw new Error((data && data.error) || "not saved");
+        }
       }
       try { localStorage.setItem(STORE, JSON.stringify(respuesta)); } catch (err) {}
       showMessage(thanks(respuesta), true, respuesta.asistencia === "si");
