@@ -14,6 +14,15 @@ SSH=(ssh); [ -n "${SSH_KEY:-}" ] && SSH=(ssh -i "$SSH_KEY")
 
 cd "$(dirname "$0")/.."                      # project root
 
+# Fingerprint the CSS/JS links in index.html (main.js?v=3f9a1c2b): when a file changes,
+# its URL changes, so no phone, browser or CDN can keep serving an old copy.
+hash8() { if command -v md5sum >/dev/null; then md5sum "$1" | cut -c1-8; else md5 -q "$1" | cut -c1-8; fi; }
+for f in css/fonts.css css/styles.css js/config.js js/main.js; do
+  h=$(hash8 "$f")
+  sed -E -i.bak "s#\"$f(\?v=[0-9a-f]+)?\"#\"$f?v=$h\"#" index.html && rm -f index.html.bak
+done
+echo "Fingerprinted: $(grep -oE '(css|js)/[a-z]+\.(css|js)\?v=[0-9a-f]+' index.html | tr '\n' ' ')"
+
 # Create the folder once and make the login user its owner (nginx only needs to read).
 "${SSH[@]}" "$HOST" "sudo mkdir -p '$REMOTE_DIR' && sudo chown -R \$(whoami): '$REMOTE_DIR'"
 

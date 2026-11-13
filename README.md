@@ -73,14 +73,25 @@ The page sends each answer to a small Google Apps Script, which appends a row
 5. **Test it**: open the /exec URL in a **private/incognito** window, which is how
    guests reach it (not logged in). It must show `{"ok":true,"msg":"RSVP listo",…}`.
 
-How the page sends answers, and why: it loads the /exec URL as a `<script>`
-(`?nombre=…&asistencia=…&callback=…`) instead of using `fetch()`. Browsers apply CORS
-to `fetch()`, and Apps Script replies come through a redirect to another Google domain
-that some browsers and devices block with "has been blocked by CORS policy", even when
-the script is set up correctly. Script loads aren't subject to CORS. The Apps Script replies by
-calling the page back with `{ok:true}` (saved) or `{ok:false,error:"…"}`, so the guest
-only sees "¡Gracias!" when the row is really in the sheet; otherwise they get a retry
-message and the console shows the reason (`[RSVP] …`).
+How the page sends answers, and why (two steps):
+
+1. **As a `<script>` request** (`/exec?nombre=…&asistencia=…&callback=…`). Browsers don't
+   apply CORS to script loads, unlike `fetch()`. Apps Script replies come through a redirect
+   to another Google domain, which some devices block as "CORS policy" errors. The script
+   answers by calling the page back with `{ok:true}` or `{ok:false,error:"…"}`, so the
+   save is **confirmed**.
+2. **If that can't load, as an anonymous POST.** A script request carries the browser's
+   Google login. Browsers signed into several Google accounts, or into a work account, can
+   get a Google error page instead of the reply. The page then resends the same answer
+   with no cookies, exactly like an incognito window, in `no-cors` mode. It can't hit
+   CORS, but Google's reply can't be read, so this path is unconfirmed. In the rare case
+   where step 1 saved but its reply was blocked, you may see a duplicate row with the
+   same name a second apart.
+
+**Diagnose any device (phones included):** open the page with **`?debug`**, e.g.
+`…/invitacion-boda-isaias-y-nicole/?debug`. A panel shows the code version the device
+is really running, the endpoint it uses, and each RSVP step with its result. No panel
+at all means that device is running old code (see caching in 4.3).
 
 **Troubleshooting (incognito test of the /exec URL):**
 
@@ -151,7 +162,12 @@ deploy/deploy.sh ubuntu@hsoul.ink
 SSH_KEY=~/.ssh/aws.pem deploy/deploy.sh ubuntu@hsoul.ink
 ```
 
-What it does: it creates the folder above once (owned by your login user, which
+Before uploading, it stamps the CSS/JS links in `index.html` with a fingerprint of
+each file (`js/main.js?v=3f9a1c2b`). When a file changes, its URL changes, so no phone,
+browser or CDN (e.g. Cloudflare) can keep serving an old copy. That matters because
+an old `main.js` or `config.js` on one device behaves like a bug you already fixed.
+
+What it does next: it creates the folder above once (owned by your login user, which
 nginx only needs to read), then rsyncs the four web items. Files get standard
 permissions (folders 755, files 644). Re-running it is how you update: only
 changed files travel, and files deleted locally are deleted on the server.

@@ -1,6 +1,22 @@
 (() => {
   "use strict";
+  const BUILD = "2026-11-13.4";            // shown with ?debug: tells which code a device really runs
+  const DEBUG = /[?&#]debug\b/.test(location.search + location.hash);
+  let dbgBox = null;
+  function dbg(msg) {
+    if (!DEBUG) return;
+    console.info("[debug]", msg);
+    if (!dbgBox) {
+      dbgBox = document.createElement("pre");
+      dbgBox.style.cssText = "position:fixed;left:8px;right:8px;bottom:8px;z-index:99;max-height:40vh;overflow:auto;" +
+        "margin:0;padding:10px;background:rgba(0,0,0,.85);color:#9f9;font:12px/1.4 monospace;white-space:pre-wrap;border-radius:8px;user-select:text";
+      document.body.appendChild(dbgBox);
+    }
+    dbgBox.textContent += (dbgBox.textContent ? "\n" : "") + new Date().toLocaleTimeString() + "  " + msg;
+  }
   const C = window.INVITE_CONFIG || {};
+  dbg("versión " + BUILD + " · endpoint " + (C.rsvpEndpoint ? "…" + C.rsvpEndpoint.slice(-26) : "(none: demo mode)"));
+  dbg(navigator.userAgent);
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -232,10 +248,14 @@
     toast(text);
   }
 
-  // Sends the answer to the Apps Script as a <script> request (JSONP). Browsers don't
-  // apply CORS to script loads, so Google's redirects/cross-domain replies can't block
-  // it, unlike fetch(). The script replies by calling our callback with {ok, error}.
-  function sendRsvp(url, r) {
+  // Sending an answer, in two steps:
+  //  1) as a <script> request (JSONP): not subject to CORS, and the Apps Script replies
+  //     {ok, error}, so we know the row was saved;
+  //  2) if that can't load (e.g. the browser is signed into several Google accounts, or
+  //     a work account, and Google answers with an error page), the same answer goes as
+  //     an anonymous POST (no cookies, like an incognito window) in "no-cors" mode:
+  //     it can't hit CORS errors, but the reply can't be read, so it's unconfirmed.
+  function jsonp(url, r) {
     return new Promise((resolve, reject) => {
       const cb = "__rsvp" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
       const q = new URLSearchParams({ nombre: r.nombre, asistencia: r.asistencia, enviado: r.enviado, callback: cb });
@@ -243,16 +263,34 @@
       let timer;
       const done = () => { clearTimeout(timer); delete window[cb]; tag.remove(); };
       window[cb] = (data) => { done(); resolve(data); };
-      tag.onerror = () => {
-        done();
-        console.error("[RSVP] The Apps Script could not be loaded. Open the /exec URL in an incognito window: " +
-          "it must show {\"ok\":true}. A sign-in page means the deployment isn't 'Anyone' (README → 2).");
-        reject(new Error("script load failed"));
-      };
-      timer = setTimeout(() => { done(); reject(new Error("timeout")); }, 12000);
+      tag.onerror = () => { done(); reject(new Error("script load failed")); };
+      timer = setTimeout(() => { done(); reject(new Error("timeout")); }, 8000);
       tag.src = url + (url.includes("?") ? "&" : "?") + q;
       document.head.appendChild(tag);
     });
+  }
+  async function sendRsvp(url, r) {
+    try {
+      const data = await jsonp(url, r);
+      dbg("1) script request → " + JSON.stringify(data));
+      return data;                                    // {ok:false} = the script ran and said why: no retry
+    } catch (err) {
+      dbg("1) script request failed (" + err.message + ") → trying anonymous POST");
+      console.warn("[RSVP] script request failed (" + err.message + "); sending anonymously instead");
+    }
+    try {
+      await fetch(url, {
+        method: "POST", mode: "no-cors", credentials: "omit",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(r),
+      });
+      dbg("2) anonymous POST → sent (Google's reply can't be read in this mode)");
+      return { ok: true, unconfirmed: true };
+    } catch (err) {
+      dbg("2) anonymous POST failed (" + err.message + ")");
+      console.error("[RSVP] Could not reach the Apps Script at all (network/blocked):", err);
+      throw err;
+    }
   }
 
   form.addEventListener("submit", async (e) => {
