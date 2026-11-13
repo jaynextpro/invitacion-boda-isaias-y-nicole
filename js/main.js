@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD = "2026-11-13.4";            // shown with ?debug: tells which code a device really runs
+  const BUILD = "2026-11-13.5";            // shown with ?debug: tells which code a device really runs
   const DEBUG = /[?&#]debug\b/.test(location.search + location.hash);
   let dbgBox = null;
   function dbg(msg) {
@@ -143,6 +143,20 @@
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 10000);
   }
+  // After a confirmed "Sí": open the calendar file if the browser still counts this as
+  // part of the guest's tap (downloads need one; Chrome allows ~5 s, Safari less).
+  // Otherwise the "Agregar al calendario" button in the thank-you message does it.
+  function offerCalendar() {
+    const ua = navigator.userActivation;
+    if (!ua || ua.isActive) {
+      dbg("calendar: opened automatically");
+      downloadIcs();
+    } else {
+      dbg("calendar: tap expired → showing the button");
+      toast("Toca «Agregar al calendario» para guardar la fecha.", 5000);
+    }
+  }
+
   function googleCalendarUrl() {
     const q = new URLSearchParams({
       action: "TEMPLATE",
@@ -301,9 +315,8 @@
     if (!choice) { invalid($(".f-rsvp_pregunta"), "Elige si nos acompañarás."); return; }
 
     const respuesta = { nombre, asistencia: choice.value, enviado: new Date().toISOString() };
-    // Start the calendar download right away, while the tap still counts as a user
-    // gesture: after waiting for the network, phones may silently block it.
-    if (respuesta.asistencia === "si") downloadIcs();
+    // The answer is saved FIRST, the calendar opens after. On iPhone, opening the
+    // calendar file interrupts the page's requests in flight, which lost "Sí" answers.
     submitBtn.disabled = true;
     try {
       if (C.rsvpEndpoint) {
@@ -315,6 +328,7 @@
       }
       try { localStorage.setItem(STORE, JSON.stringify(respuesta)); } catch (err) {}
       showMessage(thanks(respuesta), true, respuesta.asistencia === "si");
+      if (respuesta.asistencia === "si") offerCalendar();
     } catch (err) {
       toast("No pudimos enviar tu respuesta. Revisa tu conexión e intenta de nuevo.");
     } finally {

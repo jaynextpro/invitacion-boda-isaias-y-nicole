@@ -119,10 +119,12 @@ Until an endpoint is set, answers are only saved in the guest's own browser
 Player buttons: ♥ toggles a like, ⏮/⏭ seek ±10 s, ⊕ downloads the song
 (`songDownloadName` sets the file name), and the bar is draggable.
 
-When a guest accepts, the calendar event (`boda.ics`) downloads immediately. It
-starts on the tap itself because phones block downloads that begin after waiting
-for the network. The thank-you message also offers "Agregar al calendario" and a
-Google Calendar link, in case the guest dismissed the first one.
+When a guest accepts, the answer is saved first, then the calendar event
+(`boda.ics`) opens. The order matters: on iPhone, opening the calendar interrupts the
+page's requests in flight, so "Sí" answers were lost while "No" worked. Browsers only
+allow the download as part of the guest's tap. If saving took too long for that,
+which can happen on a slow connection, the guest gets a short message to use the
+"Agregar al calendario" button in the thank-you message, next to a Google Calendar link.
 
 ## 4. Deploy on AWS Ubuntu with nginx
 
