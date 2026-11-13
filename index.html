@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es" class="preload">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>¡Nos casamos! · Invitación de boda</title>
+<meta name="description" content="Estamos encantados de compartir con ustedes la alegría de este momento tan especial. 27 de diciembre · San Miguel.">
+<meta name="theme-color" content="#7d825d">
+<!-- The design is light-only. These stop browsers' "force dark" modes (Chrome/Samsung on
+     Android, Edge/Opera settings) and the Dark Reader extension from repainting it. -->
+<meta name="color-scheme" content="only light">
+<meta name="darkreader-lock">
+<!-- Link previews (WhatsApp, Facebook, iMessage…) need absolute URLs: SITE_URL in tools/build_assets.py -->
+<link rel="canonical" href="https://my-brand.com/live-projects/letters/invitacion-boda-isaias-y-nicole/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://my-brand.com/live-projects/letters/invitacion-boda-isaias-y-nicole/">
+<meta property="og:title" content="¡Nos casamos!">
+<meta property="og:description" content="Te invitamos a celebrar con nosotros · 27 de diciembre · San Miguel">
+<meta property="og:image" content="https://my-brand.com/live-projects/letters/invitacion-boda-isaias-y-nicole/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" as="image" href="assets/img/intro_sobre.webp">
+<link rel="preload" as="image" href="assets/img/intro_pareja.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Poppins = player title. Tinos has the same metrics as Times New Roman (the design font) and is used only on devices without it, e.g. Android -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<!-- hide the page until styles.css has applied (no flash of unstyled content) -->
+<style>body{visibility:hidden}</style>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="is-intro">
+
+<!-- ===== Intro: envelope -> couple -> page ===== -->
+<div class="intro" id="intro" aria-label="Invitación">
+  <div class="stage">
+    <div class="screen screen-sobre" id="screenSobre" role="button" tabindex="0" aria-label="Abrir la invitación">
+      <div class="cover" style="--ar:1080/1493">
+        <img src="assets/img/intro_sobre.webp" alt="" class="fill">
+        <img src="assets/img/sello.webp" alt="" class="seal" style="left:33.8889%;top:37.4414%;width:31.8519%;height:23.0409%">
+        <svg class="env-text" style="left:27.1296%;top:78.0978%;width:45.8333%;height:10.9176%" viewBox="293 1166 495 163" preserveAspectRatio="none"><text x="539.76" y="1235.22" font-size="81.25" text-anchor="middle" fill="#7d835d" class="v">Presiona el sobre</text><text x="539.76" y="1303.95" font-size="81.25" text-anchor="middle" fill="#7d835d" class="v">para abrirlo.</text></svg>
+      </div>
+    </div>
+    <div class="screen screen-pareja" id="screenPareja" aria-hidden="true">
+      <div class="cover" style="--ar:1080/1609">
+        <img src="assets/img/intro_pareja.webp" alt="" class="fill">
+      </div>
+      <svg class="partners-text" style="top:7.2094%;--w:0.8741" viewBox="71 1708 944 194" preserveAspectRatio="none"><text x="368.50" y="1788.29" font-size="96.42" text-anchor="middle" fill="#ffffff" class="v">“Mr</text><text x="698.60" y="1788.29" font-size="96.42" text-anchor="middle" fill="#ffffff" class="v">Mrs.</text><text x="526.85" y="1791.18" font-size="67.80" text-anchor="middle" fill="#ffffff" class="v">&amp;</text><text x="537.48" y="1875.06" font-size="72.32" text-anchor="middle" fill="#ffffff" class="v">And So The Adventure Begins.”</text></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Main invitation ===== -->
+<main class="page" id="page">
+<section class="sec" id="player" style="aspect-ratio:1080/582">
+  <img class="bg" src="assets/img/sec_player.webp" alt="" width="1080" height="582" loading="eager" decoding="async">
+  <div class="el" style="left:41.8519%;top:25.9450%;width:26.3889%;height:12.3711%"><svg class="tsvg" viewBox="452 3589 285 72" preserveAspectRatio="none"><text x="523.28" y="3618.97" font-size="33.54" text-anchor="middle" fill="#ffffff" class="p" font-weight="700">Contigo</text><text x="594.80" y="3650.94" font-size="24.72" text-anchor="middle" fill="#ffffff" class="p" font-weight="500">Los Panchos - Contigo</text></svg></div>
+  <img class="disc" id="disc" src="assets/img/disco.webp" alt="" style="left:9.8611%;top:19.7595%;width:29.8148%;height:55.3265%">
+  <button class="pbtn" id="likeBtn" aria-label="Me gusta" aria-pressed="false" style="left:42.1296%;top:46.3918%;width:5.6481%;height:9.9656%"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C1 8.6 3 5 6.6 5c2.1 0 3.6 1.2 4.4 2.6h2C13.8 6.2 15.3 5 17.4 5 21 5 23 8.6 21.6 11.8 19.5 16.4 12 21 12 21z"/></svg></button>
+  <button class="pbtn" id="prevBtn" aria-label="Retroceder 10 segundos" style="left:51.8519%;top:47.0790%;width:4.4444%;height:8.9347%"></button>
+  <button class="play" id="playBtn" aria-label="Reproducir" style="left:58.7963%;top:43.6426%;width:8.3333%;height:15.4639%"><svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg><svg class="i-pause" viewBox="0 0 24 24"><path d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z"/></svg></button>
+  <button class="pbtn" id="nextBtn" aria-label="Adelantar 10 segundos" style="left:69.6296%;top:47.0790%;width:4.4444%;height:8.9347%"></button>
+  <a class="pbtn" id="dlBtn" href="#" download aria-label="Descargar la canción" style="left:78.8889%;top:46.9072%;width:4.9074%;height:9.1065%"></a>
+  <div class="progress" style="left:42.7778%;top:63.2302%;width:40.5556%;height:6.1856%"><input type="range" id="seek" min="0" max="1000" value="0" step="1" aria-label="Posición de la canción"></div>
+</section>
+<section class="sec" id="saludo" style="aspect-ratio:1080/2208">
+  <img class="bg" src="assets/img/sec_saludo.webp" alt="" width="1080" height="2208" loading="eager" decoding="async">
+  <div class="el reveal" style="left:10.6481%;top:8.6504%;width:78.5185%;height:5.2083%;--d:0"><svg class="tsvg" viewBox="115 4211 848 115" preserveAspectRatio="none"><text x="539.03" y="4285.97" font-size="91.67" text-anchor="middle" fill="#ffffff" class="v">¡Querida familia y amigos!</text></svg></div>
+  <div class="el reveal" style="left:8.1481%;top:14.1757%;width:83.5185%;height:14.8551%;--d:1"><svg class="tsvg" viewBox="88 4333 902 328" preserveAspectRatio="none"><text x="538.79" y="4370.53" font-size="50.00" text-anchor="middle" fill="#ffffff">¡Nos casamos!</text><text x="538.69" y="4450.47" font-size="33.33" text-anchor="middle" fill="#ffffff">Estamos encantados de compartir con ustedes la alegría de este</text><text x="538.69" y="4490.44" font-size="33.33" text-anchor="middle" fill="#ffffff">momento tan especial. Como Familia Guevara Cañas, queremos</text><text x="538.69" y="4530.41" font-size="33.33" text-anchor="middle" fill="#ffffff">invitarlos a acompañarnos a celebrar el inicio de esta nueva etapa y</text><text x="538.69" y="4570.38" font-size="33.33" text-anchor="middle" fill="#ffffff">a ser parte de uno de los días más importantes de nuestras vidas.</text><text x="538.69" y="4650.32" font-size="33.33" text-anchor="middle" fill="#ffffff">Será una alegría contar con su presencia y compartir juntos</text></svg></div>
+  <div class="el reveal" style="left:13.3333%;top:27.3551%;width:73.2407%;height:3.1703%;--d:2"><svg class="tsvg" viewBox="144 4624 791 70" preserveAspectRatio="none"><text x="538.69" y="4690.29" font-size="33.33" text-anchor="middle" fill="#ffffff">este día inolvidable.</text></svg></div>
+</section>
+<section class="sec" id="ceremonia" style="aspect-ratio:1080/2012">
+  <img class="bg" src="assets/img/sec_ceremonia.webp" alt="" width="1080" height="2012" loading="lazy" decoding="async">
+  <div class="el fade" style="left:37.8704%;top:6.1133%;width:47.9630%;height:30.3678%;--d:0"><img src="assets/img/el_cer_foto.webp" alt="Foto de la pareja en la playa" loading="lazy" decoding="async"></div>
+  <div class="el reveal" style="left:22.5000%;top:47.1670%;width:53.0556%;height:6.0139%;--d:1"><svg class="tsvg" viewBox="243 7177 573 121" preserveAspectRatio="none"><text x="533.39" y="7260.92" font-size="75.01" text-anchor="middle" fill="#676d4b" transform="rotate(-6.82 533.39 7260.92)">Nuestra ceremonia</text></svg></div>
+  <div class="el reveal" style="left:25.5556%;top:52.0875%;width:51.2037%;height:8.6481%;--d:2"><svg class="tsvg" viewBox="276 7276 553 174" preserveAspectRatio="none"><text x="547.84" y="7400.69" font-size="125.00" text-anchor="middle" fill="#676d4b" transform="rotate(-6.78 547.84 7400.69)" class="v">Boda Civil</text></svg></div>
+  <div class="el reveal" style="left:20.0000%;top:58.7475%;width:63.1481%;height:8.0020%;--d:3"><svg class="tsvg" viewBox="216 7410 682 161" preserveAspectRatio="none"><text x="559.21" y="7470.52" font-size="37.50" text-anchor="middle" fill="#676d4b" transform="rotate(-6.71 559.21 7470.52)">El comienzo de una nueva historia, unida por</text><text x="564.53" y="7515.23" font-size="37.50" text-anchor="middle" fill="#676d4b" transform="rotate(-6.71 564.53 7515.23)">el amor y la promesa de caminar juntos para</text><text x="569.86" y="7559.93" font-size="37.50" text-anchor="middle" fill="#676d4b" transform="rotate(-6.71 569.86 7559.93)">siempre.</text></svg></div>
+</section>
+<section class="sec" id="ubicacion" style="aspect-ratio:1080/1462">
+  <img class="bg" src="assets/img/sec_ubicacion.webp" alt="" width="1080" height="1462" loading="lazy" decoding="async">
+  <div class="el reveal" style="left:19.7212%;top:11.9072%;width:59.3519%;height:5.4612%;--d:0"><svg class="tsvg" viewBox="212.98939968265165 174.08321579689704 641.0 79.84203102961916" preserveAspectRatio="none"><text x="533.49" y="232.27" font-size="52.19" text-anchor="middle" fill="#ffffff" letter-spacing="-0.32">El evento se llevará a cabo en:</text></svg></div>
+  <div class="el reveal" style="left:8.5896%;top:16.4491%;width:82.0370%;height:9.9530%;--d:1"><svg class="tsvg" viewBox="92.76756756756754 240.48648648648646 886.0 145.51351351351354" preserveAspectRatio="none"><text x="535.77" y="349.19" font-size="102.70" text-anchor="middle" fill="#ffffff" letter-spacing="-0.25" class="v">El Jardín Casa Rosada</text></svg></div>
+  <div class="el reveal" style="left:13.7968%;top:24.8388%;width:72.1296%;height:16.7281%;--d:2"><svg class="tsvg" viewBox="149.00525412087904 363.1433296582139 779.0 244.56436264947837" preserveAspectRatio="none"><text x="534.00" y="420.96" font-size="51.82" text-anchor="middle" fill="#ffffff" letter-spacing="-0.20">en casa de la Sra. Doris Campos.</text><text x="537.52" y="510.49" font-size="69.87" text-anchor="middle" fill="#ffffff">A las 3:30 p.m.</text><rect x="324.00" y="524.00" width="430.00" height="4.00" fill="#ffffff"/><text x="538.51" y="584.89" font-size="56.04" text-anchor="middle" fill="#ffffff" letter-spacing="-0.48">Residencial Riverside, San Miguel</text></svg></div>
+  <button type="button" class="el reveal ubi-btn" id="ubiBtn" aria-haspopup="dialog" aria-controls="ubiModal" style="left:15.9259%;top:48.7688%;width:68.8889%;height:6.9083%;--d:3;--rad:25"><img src="assets/img/el_ubi_boton.webp" alt="" loading="lazy" decoding="async"><svg class="tsvg" viewBox="172 713 744 101" preserveAspectRatio="none"><text x="547.51" y="780.22" font-size="52.11" text-anchor="middle" fill="#7b845b" letter-spacing="-0.58">Ver ubicación</text></svg><span class="sr">Ver ubicación</span></button>
+</section>
+<section class="sec" id="nota" style="aspect-ratio:1080/1404">
+  <img class="bg" src="assets/img/sec_nota.webp" alt="" width="1080" height="1404" loading="lazy" decoding="async">
+  <div class="el reveal" style="left:21.8519%;top:10.4701%;width:21.2037%;height:10.8974%;--d:0"><svg class="tsvg" viewBox="236 9871 229 153" preserveAspectRatio="none"><text x="336.67" y="9941.80" font-size="83.40" text-anchor="middle" fill="#64694b" transform="rotate(-0.20 336.67 9941.80)" class="v">Nota</text><text x="345.19" y="9998.96" font-size="83.40" text-anchor="middle" fill="#64694b" transform="rotate(-0.20 345.19 9998.96)" class="v">especial</text></svg></div>
+  <div class="el reveal" style="left:17.0370%;top:20.7977%;width:30.6481%;height:9.5442%;--d:1"><svg class="tsvg" viewBox="184 10016 331 134" preserveAspectRatio="none"><text x="349.30" y="10046.44" font-size="38.12" text-anchor="middle" fill="#64694b" transform="rotate(-0.22 349.30 10046.44)">Les pedimos</text><text x="349.44" y="10092.20" font-size="38.12" text-anchor="middle" fill="#64694b" transform="rotate(-0.22 349.44 10092.20)">amablemente evitar</text><text x="349.58" y="10137.95" font-size="38.12" text-anchor="middle" fill="#64694b" transform="rotate(-0.22 349.58 10137.95)">los siguientes colores</text></svg></div>
+  <div class="el pop" style="left:17.5926%;top:31.4103%;width:14.1667%;height:10.8974%;--d:2"><img src="assets/img/el_color_1.webp" alt="Blanco" loading="lazy" decoding="async"></div>
+  <div class="el pop" style="left:32.2222%;top:31.4103%;width:13.9815%;height:10.7550%;--d:3"><img src="assets/img/el_color_2.webp" alt="Rojo" loading="lazy" decoding="async"></div>
+  <div class="el pop" style="left:17.6852%;top:43.0199%;width:14.1667%;height:10.8262%;--d:0"><img src="assets/img/el_color_3.webp" alt="Beige" loading="lazy" decoding="async"></div>
+  <div class="el pop" style="left:32.3148%;top:42.9487%;width:13.8889%;height:10.7550%;--d:1"><img src="assets/img/el_color_4.webp" alt="Verde olivo" loading="lazy" decoding="async"></div>
+  <div class="el reveal" style="left:44.5370%;top:61.3248%;width:38.8889%;height:8.3333%;--d:2"><svg class="tsvg" viewBox="481 10585 420 117" preserveAspectRatio="none"><text x="689.81" y="10666.17" font-size="99.98" text-anchor="middle" fill="#64694b" transform="rotate(-0.17 689.81 10666.17)" class="v">Sugerencia</text></svg></div>
+  <div class="el reveal" style="left:48.4259%;top:69.2308%;width:32.1296%;height:3.5613%;--d:3"><svg class="tsvg" viewBox="523 10696 347 50" preserveAspectRatio="none"><text x="697.26" y="10742.05" font-size="62.49" text-anchor="middle" fill="#64694b" transform="rotate(-0.13 697.26 10742.05)" font-style="italic">DE REGALO</text></svg></div>
+  <div class="el reveal" style="left:38.0556%;top:74.0741%;width:51.7593%;height:7.6211%;--d:0"><svg class="tsvg" viewBox="411 10764 559 107" preserveAspectRatio="none"><text x="690.23" y="10790.87" font-size="31.24" text-anchor="middle" fill="#64694b" transform="rotate(-0.27 690.23 10790.87)">Tu presencia es nuestro regalo más especial.</text><text x="690.35" y="10828.38" font-size="31.24" text-anchor="middle" fill="#64694b" transform="rotate(-0.27 690.35 10828.38)">Si deseas acompañarnos con un detalle, será</text><text x="690.47" y="10865.90" font-size="31.24" text-anchor="middle" fill="#64694b" transform="rotate(-0.27 690.47 10865.90)">recibido con mucho cariño en un sobre.</text></svg></div>
+</section>
+<section class="sec" id="foto" style="aspect-ratio:1080/708">
+  <img class="bg" src="assets/img/sec_foto.webp" alt="" width="1080" height="708" loading="lazy" decoding="async">
+  
+</section>
+<section class="sec" id="rsvp" style="aspect-ratio:1080/1400">
+  <img class="bg" src="assets/img/sec_rsvp.webp" alt="" width="1080" height="1400" loading="lazy" decoding="async">
+  <form id="rsvpForm" class="rsvp-form" novalidate>
+  <div class="el reveal" style="left:23.3333%;top:9.7143%;width:54.2593%;height:10.3571%;--d:0"><svg class="tsvg" viewBox="252 11972 586 145" preserveAspectRatio="none"><text x="542.03" y="12073.49" font-size="125.00" text-anchor="middle" fill="#ffffff" class="v">Confirmación</text></svg></div>
+  <div class="el reveal" style="left:11.9444%;top:21.9286%;width:79.7222%;height:11.3571%;--d:1"><svg class="tsvg" viewBox="129 12143 861 159" preserveAspectRatio="none"><text x="559.01" y="12169.65" font-size="34.03" text-anchor="middle" fill="#ffffff" letter-spacing="-0.28">Para preparar cada detalle de nuestra celebración y garantizar</text><text x="558.99" y="12209.72" font-size="34.18" text-anchor="middle" fill="#ffffff" letter-spacing="-0.36">la comodidad de todos nuestros invitados, te pedimos completar</text><text x="558.51" y="12249.66" font-size="33.61" text-anchor="middle" fill="#ffffff" letter-spacing="-0.11">nuestro formulario de confirmación antes del</text><text x="558.50" y="12290.55" font-size="33.94" text-anchor="middle" fill="#ffffff" letter-spacing="-0.21" font-style="italic" font-weight="700">15 de diciembre de 2026.</text><rect x="388.00" y="12293.61" width="341.00" height="2.04" fill="#ffffff"/></svg></div>
+  <div class="el reveal f-rsvp_label" style="left:7.8704%;top:38.8571%;width:13.8889%;height:2.2143%;--d:2"><svg class="tsvg" viewBox="85 12380 150 31" preserveAspectRatio="none"><text x="160.00" y="12406.61" font-size="33.33" text-anchor="middle" fill="#ffffff">Tu nombre</text></svg></div>
+  <div class="el reveal f-rsvp_linea" style="left:7.2222%;top:43.6429%;width:87.4074%;height:0.9286%;--d:3"><img src="assets/img/el_rsvp_linea.webp" alt="" loading="lazy" decoding="async"></div>
+  <div class="el reveal f-rsvp_pregunta" style="left:7.8704%;top:49.9286%;width:45.0926%;height:2.6429%;--d:0"><svg class="tsvg" viewBox="85 12535 487 37" preserveAspectRatio="none"><text x="328.53" y="12561.61" font-size="33.33" text-anchor="middle" fill="#ffffff">¿Nos acompañarás en nuestra boda?</text></svg></div>
+  <div class="el reveal f-rsvp_si" style="left:15.0000%;top:54.7143%;width:32.7778%;height:2.6429%;--d:1"><svg class="tsvg" viewBox="162 12602 354 37" preserveAspectRatio="none"><text x="338.81" y="12628.67" font-size="33.33" text-anchor="middle" fill="#ffffff">¡Acepto con mucho gusto!</text></svg></div>
+  <div class="el reveal f-rsvp_no" style="left:14.7222%;top:58.5714%;width:43.6111%;height:2.6429%;--d:2"><svg class="tsvg" viewBox="159 12656 471 37" preserveAspectRatio="none"><text x="395.26" y="12682.72" font-size="33.33" text-anchor="middle" fill="#ffffff">Lamentablemente, no podré asistir.</text></svg></div>
+  <div class="el reveal f-rsvp_radio_si" style="left:9.2593%;top:53.9286%;width:4.7222%;height:3.6429%;--d:3"><img src="assets/img/el_rsvp_radio_si.webp" alt="" loading="lazy" decoding="async"></div>
+  <div class="el reveal f-rsvp_radio_no" style="left:9.2593%;top:57.7857%;width:4.7222%;height:3.6429%;--d:0"><img src="assets/img/el_rsvp_radio_no.webp" alt="" loading="lazy" decoding="async"></div>
+  <button class="el reveal f-rsvp_boton" type="submit" id="rsvpSubmit" style="left:18.6111%;top:67.7857%;width:68.3333%;height:7.4286%;--d:1"><img src="assets/img/el_rsvp_boton.webp" alt="" loading="lazy" decoding="async"><svg class="tsvg" viewBox="201 12785 738 104" preserveAspectRatio="none"><text x="570.14" y="12851.20" font-size="50.00" text-anchor="middle" fill="#7d835d">Enviar</text></svg></button>
+  <input class="name" id="rsvpName" name="nombre" autocomplete="name" required aria-label="Tu nombre" style="left:7.7778%;top:37.8571%;width:86.6667%;height:6.0000%">
+  <label class="opt" style="left:7.7778%;top:54.1429%;width:84.8148%;height:3.7143%"><input type="radio" name="asistencia" value="si" required><span class="dot" style="left:4.367%"></span><span class="sr">¡Acepto con mucho gusto!</span></label>
+  <label class="opt" style="left:7.7778%;top:57.8571%;width:84.8148%;height:3.7143%"><input type="radio" name="asistencia" value="no"><span class="dot" style="left:4.367%"></span><span class="sr">Lamentablemente, no podré asistir.</span></label>
+  <div class="rsvp-msg" id="rsvpMsg" role="status" aria-live="polite" style="left:7.4074%;top:37.4286%;width:85.1852%;height:38.5714%"></div>
+  </form>
+</section>
+<section class="sec" id="cuenta" style="aspect-ratio:1080/1373">
+  <img class="bg" src="assets/img/sec_cuenta.webp" alt="" width="1080" height="1373" loading="lazy" decoding="async">
+  <div class="el reveal" style="left:10.3704%;top:29.6431%;width:78.4259%;height:16.5331%;--d:0"><svg class="tsvg" viewBox="112 13643 847 227" preserveAspectRatio="none"><text x="534.12" y="13742.09" font-size="110.80" text-anchor="middle" fill="#ffffff" transform="translate(534.12 13742.09) scale(1 1.0772) translate(-534.12 -13742.09)" class="v">Nuestro para siempre</text><text x="534.12" y="13828.02" font-size="110.80" text-anchor="middle" fill="#ffffff" transform="translate(534.12 13828.02) scale(1 1.0772) translate(-534.12 -13828.02)" class="v">empieza en...</text></svg></div>
+  <div class="el reveal" style="left:8.4259%;top:59.1406%;width:86.6667%;height:3.8602%;--d:1"><svg class="tsvg" viewBox="91 14048 936 53" preserveAspectRatio="none"><text x="139.74" y="14086.39" font-size="50.00" text-anchor="middle" fill="#ffffff">Días</text><text x="394.74" y="14086.39" font-size="50.00" text-anchor="middle" fill="#ffffff">Horas</text><text x="650.13" y="14086.39" font-size="50.00" text-anchor="middle" fill="#ffffff">Minutos</text><text x="928.07" y="14086.39" font-size="50.00" text-anchor="middle" fill="#ffffff">Segundos</text></svg></div>
+  <div class="cd" style="left:0.0000%;top:49.4538%;width:100.0000%;height:8.0117%" aria-live="off"><span class="num" id="cd-d" style="left:12.685%">00</span><span class="num" id="cd-h" style="left:35.926%">00</span><span class="num" id="cd-m" style="left:60.185%">00</span><span class="num" id="cd-s" style="left:86.019%">00</span><span class="colon" style="left:25.463%">:</span><span class="colon" style="left:46.574%">:</span><span class="colon" style="left:72.222%">:</span></div>
+</section>
+</main>
+
+<!-- ===== Location photo modal ===== -->
+<dialog class="modal" id="ubiModal" aria-label="Ubicación del evento">
+  <div class="modal-card">
+    <img class="modal-photo" data-src="assets/img/ubi_casa.webp" alt="Fachada de la casa donde será el evento" width="1200" height="1100">
+    <div class="modal-actions">
+      <a class="mbtn primary" id="mapsLink" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>Ver en Google Maps</a>
+      <button type="button" class="mbtn" id="ubiClose">Cerrar</button>
+    </div>
+  </div>
+</dialog>
+
+<audio id="song" preload="auto" loop></audio>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/config.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

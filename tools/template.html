@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es" class="preload">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>¡Nos casamos! · Invitación de boda</title>
+<meta name="description" content="Estamos encantados de compartir con ustedes la alegría de este momento tan especial. 27 de diciembre · San Miguel.">
+<meta name="theme-color" content="#7d825d">
+<!-- The design is light-only. These stop browsers' "force dark" modes (Chrome/Samsung on
+     Android, Edge/Opera settings) and the Dark Reader extension from repainting it. -->
+<meta name="color-scheme" content="only light">
+<meta name="darkreader-lock">
+<!-- Link previews (WhatsApp, Facebook, iMessage…) need absolute URLs: SITE_URL in tools/build_assets.py -->
+<link rel="canonical" href="{{SITE_URL}}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{SITE_URL}}">
+<meta property="og:title" content="¡Nos casamos!">
+<meta property="og:description" content="Te invitamos a celebrar con nosotros · 27 de diciembre · San Miguel">
+<meta property="og:image" content="{{SITE_URL}}assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" as="image" href="assets/img/intro_sobre.webp">
+<link rel="preload" as="image" href="assets/img/intro_pareja.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Poppins = player title. Tinos has the same metrics as Times New Roman (the design font) and is used only on devices without it, e.g. Android -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<!-- hide the page until styles.css has applied (no flash of unstyled content) -->
+<style>body{visibility:hidden}</style>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="is-intro">
+
+<!-- ===== Intro: envelope -> couple -> page ===== -->
+<div class="intro" id="intro" aria-label="Invitación">
+  <div class="stage">
+    <div class="screen screen-sobre" id="screenSobre" role="button" tabindex="0" aria-label="Abrir la invitación">
+      <div class="cover" style="--ar:1080/1493">
+        <img src="assets/img/intro_sobre.webp" alt="" class="fill">
+        <img src="assets/img/sello.webp" alt="" class="seal" style="{{SEAL_STYLE}}">
+        {{ENV_TEXT}}
+      </div>
+    </div>
+    <div class="screen screen-pareja" id="screenPareja" aria-hidden="true">
+      <div class="cover" style="--ar:1080/1609">
+        <img src="assets/img/intro_pareja.webp" alt="" class="fill">
+      </div>
+      {{PARTNERS_TEXT}}
+    </div>
+  </div>
+</div>
+
+<!-- ===== Main invitation ===== -->
+<main class="page" id="page">
+<!--SECTIONS-->
+</main>
+
+<!-- ===== Location photo modal ===== -->
+<!--MODAL-->
+
+<audio id="song" preload="auto" loop></audio>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/config.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

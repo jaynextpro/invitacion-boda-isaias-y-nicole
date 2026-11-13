@@ -1,0 +1,337 @@
+/* =========================================================================
+   Wedding invitation
+   Coordinates come from the 1080px-wide design; every section is a
+   container, so 1 design px = (100cqw / 1080).
+   ========================================================================= */
+:root {
+  color-scheme: only light;        /* the design is light-only: opt out of forced dark modes */
+  --col: min(100vw, 540px);
+  --green: rgb(126, 130, 95);
+  --green-dark: rgb(106, 111, 79);
+  --cream: #f0ece2;
+  --serif: "Times New Roman", Tinos, Times, serif;
+  --px: calc(100cqw / 1080);          /* one design pixel (inside a .sec) */
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  visibility: visible;            /* pairs with the inline guard in <head> */
+  background: var(--cream) radial-gradient(ellipse at top, #f7f4ec, var(--cream) 70%) fixed;
+  font-family: var(--serif);
+  -webkit-tap-highlight-color: transparent;
+}
+body.is-intro { overflow: hidden; height: 100svh; }
+img { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* ---------------- page column ---------------- */
+.page {
+  width: var(--col);
+  margin: 0 auto;
+  background: #fff;
+  box-shadow: 0 0 60px rgba(60, 60, 40, .12);
+  overflow: hidden;
+}
+.sec {
+  position: relative;
+  width: 100%;
+  container-type: inline-size;
+  overflow: hidden;
+}
+.sec > .bg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+.sec.in > .bg { opacity: 1; }
+
+.el { position: absolute; margin: 0; padding: 0; }
+.el img { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* ---------------- live text ----------------
+   Lines are SVG <text> in design pixels (see tools/build_assets.py) */
+.tsvg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.tsvg text { font-family: var(--serif); font-kerning: normal; }
+.tsvg .p, .env-text .p, .partners-text .p { font-family: Poppins, system-ui, sans-serif; }
+svg .v { font-family: "Verandah Reverie", cursive; font-kerning: normal; }
+.env-text, .partners-text { overflow: visible; pointer-events: none; }
+
+/* ---------------- scroll reveals ---------------- */
+.reveal, .fade, .pop { will-change: opacity, transform; }
+.reveal {
+  opacity: 0;
+  transform: translateY(calc(28 * var(--px)));
+  transition: opacity .9s ease, transform 1s cubic-bezier(.2, .7, .2, 1);
+  transition-delay: calc(var(--d, 0) * 120ms + 100ms);
+}
+.fade { opacity: 0; transition: opacity 1.6s ease .1s; }
+.pop {
+  opacity: 0;
+  transform: scale(.55) rotate(-8deg);
+  transition: opacity .5s ease, transform .8s cubic-bezier(.3, 1.6, .5, 1);
+  transition-delay: calc(var(--d, 0) * 140ms + 150ms);
+}
+.reveal.in, .fade.in, .pop.in { opacity: 1; transform: none; }
+
+/* ---------------- intro ----------------
+   Load-safe: centring uses the `translate` property (never animated) and every
+   transition lives on the state class that triggers it, so nothing can animate
+   while the page is still loading (that's what made the couple photo slide in
+   from the bottom-right corner on a first visit). */
+.intro {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; justify-content: center;
+  background: #e9e3d4;
+}
+.intro.leaving { opacity: 0; pointer-events: none; transition: opacity 2.2s ease; }
+.intro.leaving.skip { transition-duration: .6s; }
+.stage {
+  position: relative;
+  width: var(--col); height: 100%;
+  overflow: hidden;
+  container-type: size;
+}
+.screen { position: absolute; inset: 0; overflow: hidden; }
+.cover {
+  position: absolute; left: 50%; top: 50%;
+  width: max(100cqw, calc(100cqh * var(--ar)));
+  aspect-ratio: var(--ar);
+  translate: -50% -50%;
+}
+.cover .fill { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.screen-sobre { cursor: pointer; outline: none; }
+.screen-sobre .seal { position: absolute; animation: sealPulse 2.6s ease-in-out infinite; }
+.screen-sobre .env-text { position: absolute; animation: breathe 2.6s ease-in-out infinite; }
+.screen-sobre:focus-visible .seal { filter: drop-shadow(0 0 12px rgba(150, 120, 40, .7)); }
+@keyframes sealPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.045); } }
+@keyframes breathe { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+
+.intro.opening .seal { animation: sealOpen .65s cubic-bezier(.3, 0, .2, 1) forwards; }
+.intro.opening .env-text { animation: none; opacity: 0; transition: opacity .3s; }
+.intro.opening .screen-sobre { opacity: 0; scale: 1.06; transition: opacity .8s ease .25s, scale 1s ease .25s; }
+@keyframes sealOpen {            /* only grows, so the printed seal underneath never peeks out */
+  0% { transform: scale(1.04); filter: brightness(1); }
+  30% { transform: scale(1.14); filter: brightness(1.15); }
+  100% { transform: scale(1.45); opacity: 0; }
+}
+
+.screen-pareja { opacity: 0; visibility: hidden; pointer-events: none; }
+.screen-pareja .cover { scale: 1.1; }
+.partners-text {
+  position: absolute; left: 50%;
+  width: min(92cqw, calc(var(--w) * max(100cqw, 100cqh * 1080 / 1609)));
+  opacity: 0;
+  translate: -50% 14px;
+}
+.intro.show-pareja .screen-pareja { opacity: 1; visibility: visible; transition: opacity 2.4s ease; }
+.intro.show-pareja .screen-pareja .cover { scale: 1; transition: scale 9s cubic-bezier(.2, .6, .2, 1); }
+.intro.show-pareja .partners-text {
+  opacity: 1; translate: -50% 0;
+  transition: opacity 2.2s ease 1.2s, translate 2.6s cubic-bezier(.2, .7, .2, 1) 1.2s;
+}
+
+/* until the page has loaded, nothing transitions (belt and braces for the above) */
+.preload *, .preload *::before, .preload *::after { transition: none !important; }
+
+/* ---------------- music player ---------------- */
+.disc {
+  position: absolute;
+  animation: spin 5s linear infinite;
+  animation-play-state: paused;
+}
+body.playing .disc { animation-play-state: running; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.play, .pbtn {
+  position: absolute;
+  border: 0; padding: 0; margin: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  display: grid; place-items: center;
+  touch-action: manipulation;
+}
+.play { background: var(--green); transition: transform .15s ease, background .2s; }
+.play:hover { background: var(--green-dark); }
+.play:active { transform: scale(.92); }
+.play svg { width: 46%; height: 46%; fill: rgb(240, 237, 231); }
+.play .i-pause, body.playing .play .i-play { display: none; }
+body.playing .play .i-pause { display: block; }
+
+.pbtn { background: transparent; transition: background .2s, transform .15s; }
+.pbtn:hover { background: rgba(126, 130, 95, .1); }
+.pbtn:active { transform: scale(.88); background: rgba(126, 130, 95, .18); }
+#likeBtn svg { width: 75%; height: 75%; fill: var(--green); opacity: 0; transform: scale(.4); transition: opacity .2s, transform .35s cubic-bezier(.3, 1.8, .5, 1); }
+#likeBtn[aria-pressed="true"] svg { opacity: 1; transform: scale(1); }
+.play:focus-visible, .pbtn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+
+.progress { position: absolute; display: flex; align-items: center; }
+.progress input {
+  --p: 0%;
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: calc(36 * var(--px)); margin: 0;
+  background: linear-gradient(var(--green), var(--green)) 0 50% / var(--p) calc(3 * var(--px)) no-repeat,
+              linear-gradient(rgba(126, 130, 95, .55), rgba(126, 130, 95, .55)) 0 50% / 100% calc(2 * var(--px)) no-repeat;
+  cursor: pointer;
+  touch-action: none;
+}
+.progress input::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: calc(24 * var(--px)); height: calc(24 * var(--px));
+  min-width: 9px; min-height: 9px;
+  border-radius: 50%; background: var(--green); border: 0;
+}
+.progress input::-moz-range-thumb {
+  width: calc(24 * var(--px)); height: calc(24 * var(--px));
+  border-radius: 50%; background: var(--green); border: 0;
+}
+.progress input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+
+/* ---------------- location button + modal ---------------- */
+/* the white shape is an image (like the RSVP button) so no dark mode can recolour it */
+.ubi-btn {
+  border: 0; padding: 0; cursor: pointer;
+  background: none;
+  border-radius: calc(var(--rad) * var(--px));
+  touch-action: manipulation;
+}
+.ubi-btn img { transition: filter .2s; }
+.ubi-btn:hover img { filter: drop-shadow(0 4px 10px rgba(0, 0, 0, .18)); }
+.ubi-btn:active { scale: .97; }
+.ubi-btn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+.modal {
+  border: 0; padding: 0; margin: auto;
+  width: min(92vw, 440px); max-height: 92svh;
+  background: transparent; overflow: visible;
+}
+.modal::backdrop { background: rgba(28, 31, 18, .62); backdrop-filter: blur(3px); }
+.modal[open] { animation: modalIn .35s cubic-bezier(.2, .8, .2, 1); }
+.modal[open]::backdrop { animation: fadeIn .35s ease; }
+.modal.closing { animation: modalOut .22s ease forwards; }
+.modal.closing::backdrop { animation: fadeOut .22s ease forwards; }
+@keyframes modalIn { from { opacity: 0; translate: 0 16px; scale: .97; } }
+@keyframes modalOut { to { opacity: 0; translate: 0 10px; scale: .98; } }
+@keyframes fadeIn { from { opacity: 0; } }
+@keyframes fadeOut { to { opacity: 0; } }
+.modal-card {
+  background: #f6f2e8;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .35);
+  display: flex; flex-direction: column;
+  max-height: 92svh;
+}
+.modal-photo {
+  width: 100%; height: auto;
+  max-height: calc(92svh - 150px);
+  object-fit: cover;
+  background: #ddd8cc;
+  min-height: 0;
+}
+.modal-actions { display: grid; gap: 10px; padding: 16px; }
+.mbtn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 0 18px;
+  border-radius: 12px;
+  font: 18px/1 var(--serif);
+  text-decoration: none; cursor: pointer;
+  border: 1.5px solid var(--green); background: transparent; color: var(--green-dark);
+  touch-action: manipulation;
+}
+.mbtn.primary { background: var(--green); color: #fff; border-color: var(--green); }
+.mbtn svg { width: 20px; height: 20px; fill: currentColor; }
+.mbtn:hover { filter: brightness(.95); }
+.mbtn:active { scale: .98; }
+.mbtn:focus-visible { outline: 2px solid var(--green-dark); outline-offset: 2px; }
+body.modal-open { overflow: hidden; }
+
+/* ---------------- RSVP ---------------- */
+.rsvp-form { position: absolute; inset: 0; margin: 0; }
+.rsvp-form .name {
+  position: absolute;
+  background: transparent; border: 0; outline: 0; border-radius: 0;
+  -webkit-appearance: none; appearance: none;
+  color: #fff; caret-color: #fff;
+  font-family: var(--serif);
+  font-size: max(16px, calc(42 * var(--px)));   /* >=16px stops iOS zoom-on-focus */
+  padding: calc(18 * var(--px)) calc(6 * var(--px)) 0;
+}
+/* "Tu nombre" floats up and shrinks while typing, like a material label */
+.rsvp-form .f-rsvp_label.in { transform-origin: 0 100%; transition: transform .3s ease, opacity .3s; }
+.rsvp-form.has-name .f-rsvp_label.in,
+.rsvp-form.focus-name .f-rsvp_label.in { transform: translateY(-92%) scale(.78); opacity: .85; }
+.f-rsvp_linea img { transition: filter .3s; }
+.rsvp-form.focus-name .f-rsvp_linea img { filter: drop-shadow(0 0 0 #fff) drop-shadow(0 1px 0 #fff); }
+
+.opt { position: absolute; display: block; cursor: pointer; }
+.opt input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.opt .dot {
+  position: absolute; top: 50%;
+  width: calc(26 * var(--px)); height: calc(26 * var(--px));
+  border-radius: 50%; background: #fff;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform .25s cubic-bezier(.3, 1.6, .5, 1);
+  pointer-events: none;
+}
+.opt input:checked + .dot { transform: translate(-50%, -50%) scale(1); }
+.opt input:focus-visible + .dot { transform: translate(-50%, -50%) scale(.45); box-shadow: 0 0 0 calc(18 * var(--px)) rgba(255, 255, 255, .25); }
+
+.f-rsvp_boton { border: 0; background: none; cursor: pointer; border-radius: 999px; }
+.f-rsvp_boton img { transition: filter .2s; }
+.f-rsvp_boton:hover img { filter: drop-shadow(0 4px 10px rgba(0, 0, 0, .18)); }
+.f-rsvp_boton:active { scale: .97; }
+.f-rsvp_boton:disabled { cursor: progress; opacity: .7; }
+.f-rsvp_boton:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+.shake { animation: shake .45s ease; }
+@keyframes shake { 20%, 60% { translate: -6px 0; } 40%, 80% { translate: 6px 0; } }
+
+.rsvp-msg {
+  position: absolute;
+  display: grid; place-content: center; gap: calc(24 * var(--px));
+  text-align: center; color: #fff;
+  font-size: calc(46 * var(--px)); line-height: 1.35;
+  opacity: 0; pointer-events: none;
+  transition: opacity .6s ease .25s;
+}
+.rsvp-msg strong { font-weight: 400; font-size: 1.25em; display: block; }
+.rsvp-msg .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .5em; }
+.rsvp-msg button, .rsvp-msg a {
+  justify-self: center; text-decoration: none; font-family: inherit;
+  background: none; border: 1px solid rgba(255, 255, 255, .7); color: #fff;
+  border-radius: 999px; padding: .35em 1.2em; font-size: .7em; cursor: pointer;
+}
+.rsvp-form.sent .rsvp-msg { opacity: 1; pointer-events: auto; }
+.rsvp-form.sent [class*="f-rsvp_"], .rsvp-form.sent .name, .rsvp-form.sent .opt {
+  opacity: 0 !important; pointer-events: none; transition: opacity .4s ease;
+}
+
+/* ---------------- countdown ---------------- */
+.cd { position: absolute; color: #fff; font-family: var(--serif); font-size: calc(102 * var(--px)); line-height: 1; }
+.cd .num, .cd .colon { position: absolute; top: calc(5 * var(--px)); transform: translateX(-50%); white-space: nowrap; }
+.cd .num { transition: opacity .3s; text-shadow: 0 1px 8px rgba(0, 0, 0, .15); }
+
+/* ---------------- toast ---------------- */
+.toast {
+  position: fixed; left: 50%; bottom: max(20px, env(safe-area-inset-bottom));
+  transform: translate(-50%, 30px);
+  max-width: min(92vw, 460px);
+  background: rgba(60, 64, 40, .94); color: #fff;
+  padding: 12px 20px; border-radius: 14px;
+  font-size: 15px; line-height: 1.35; text-align: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s, transform .3s;
+  z-index: 60;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------------- reduced motion ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .fade, .pop { transform: none !important; transition: opacity .4s ease !important; }
+  .screen-sobre .seal, .screen-sobre .env-text { animation: none; }
+  .disc { animation-duration: 12s; }
+}
