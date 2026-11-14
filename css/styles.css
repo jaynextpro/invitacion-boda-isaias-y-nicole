@@ -9,7 +9,7 @@
   --green: rgb(126, 130, 95);
   --green-dark: rgb(106, 111, 79);
   --cream: #f0ece2;
-  --serif: "Times New Roman", Tinos, Times, serif;
+  --serif: "Invite Serif", "Times New Roman", Times, serif;   /* see css/fonts.css: real Times where present, else Tinos */
   --px: calc(100cqw / 1080);          /* one design pixel (inside a .sec) */
 }
 *, *::before, *::after { box-sizing: border-box; }

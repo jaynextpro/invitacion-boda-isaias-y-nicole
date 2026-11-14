@@ -14,6 +14,8 @@
  * cross-domain replies can't block it (fetch() from your domain hit "CORS policy"
  * errors on some devices). The script answers with JavaScript: fn({"ok":true}),
  * which is how the page knows the row was really saved.
+ * Each answer carries an id; a repeat of the same id (the page's fallback resend
+ * after a lost reply) is recognised and not saved twice.
  */
 
 const SHEET_ID = 'PEGA_AQUI_EL_ID_DE_TU_HOJA';  // e.g. 1AbC...xyz (only optional if the script was created from the sheet)
@@ -45,6 +47,10 @@ function save_(data) {
   const lock = LockService.getScriptLock();
   try {
     lock.waitLock(20000);   // two guests answering at once can't overwrite each other
+    // The page may send the same answer twice (a fallback after a lost reply): same id → saved once.
+    const id = String(data.id || '').slice(0, 64);
+    const cache = CacheService.getScriptCache();
+    if (id && cache.get('rsvp_' + id)) return { ok: true, duplicate: true };
     const nombre = String(data.nombre || '').trim().slice(0, 120);
     const asistencia = data.asistencia === 'si' ? 'Sí' : data.asistencia === 'no' ? 'No' : '';
     if (!nombre || !asistencia) return { ok: false, error: 'Faltan datos (nombre/asistencia)' };
@@ -52,6 +58,7 @@ function save_(data) {
     if (sheet.getLastRow() === 0) sheet.appendRow(HEADERS);
     // leading apostrophe: a name like "=SUM(...)" is stored as text, never run as a formula
     sheet.appendRow([new Date(), "'" + nombre, asistencia]);
+    if (id) cache.put('rsvp_' + id, '1', 21600);   // remembered for 6 hours
     return { ok: true };
   } catch (err) {
     return { ok: false, error: String(err && err.message || err) };

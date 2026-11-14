@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD = "2026-11-13.5";            // shown with ?debug: tells which code a device really runs
+  const BUILD = "2026-11-13.7";            // shown with ?debug: tells which code a device really runs
   const DEBUG = /[?&#]debug\b/.test(location.search + location.hash);
   let dbgBox = null;
   function dbg(msg) {
@@ -269,16 +269,20 @@
   //     a work account, and Google answers with an error page), the same answer goes as
   //     an anonymous POST (no cookies, like an incognito window) in "no-cors" mode:
   //     it can't hit CORS errors, but the reply can't be read, so it's unconfirmed.
+  //  Both carry the same id: if step 1 did save but its reply got lost, the Apps Script
+  //  recognises the repeat and doesn't add a second row.
   function jsonp(url, r) {
     return new Promise((resolve, reject) => {
       const cb = "__rsvp" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-      const q = new URLSearchParams({ nombre: r.nombre, asistencia: r.asistencia, enviado: r.enviado, callback: cb });
+      const q = new URLSearchParams({ nombre: r.nombre, asistencia: r.asistencia, enviado: r.enviado, id: r.id, callback: cb });
       const tag = document.createElement("script");
       let timer;
       const done = () => { clearTimeout(timer); delete window[cb]; tag.remove(); };
       window[cb] = (data) => { done(); resolve(data); };
       tag.onerror = () => { done(); reject(new Error("script load failed")); };
-      timer = setTimeout(() => { done(); reject(new Error("timeout")); }, 8000);
+      // Apps Script can take several seconds to wake up after being idle: give it time
+      // before falling back (a resend is harmless anyway: the script ignores repeated ids)
+      timer = setTimeout(() => { done(); reject(new Error("timeout")); }, 15000);
       tag.src = url + (url.includes("?") ? "&" : "?") + q;
       document.head.appendChild(tag);
     });
@@ -314,7 +318,10 @@
     if (nombre.length < 2) { invalid($(".f-rsvp_linea"), "Por favor escribe tu nombre."); nameInput.focus(); return; }
     if (!choice) { invalid($(".f-rsvp_pregunta"), "Elige si nos acompañarás."); return; }
 
-    const respuesta = { nombre, asistencia: choice.value, enviado: new Date().toISOString() };
+    // one id per tap on "Enviar": sent with both attempts, so the Apps Script can ignore a repeat
+    const id = (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
+    const respuesta = { nombre, asistencia: choice.value, enviado: new Date().toISOString(), id };
+    dbg("RSVP id " + id);
     // The answer is saved FIRST, the calendar opens after. On iPhone, opening the
     // calendar file interrupts the page's requests in flight, which lost "Sí" answers.
     submitBtn.disabled = true;

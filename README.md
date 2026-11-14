@@ -6,7 +6,7 @@ A static site (HTML/CSS/JS, no framework, no build step to *run* it). Open
 ```
 index.html            generated from tools/template.html (don't hand-edit sections)
 css/styles.css        all styling and animations
-css/fonts.css         generated: the script font embedded as a data URI
+css/fonts.css         generated: the script font + the serif text font (Tinos) embedded as data URIs
 js/config.js          ← the things you'll change: date, RSVP endpoint, map, song
 js/main.js            intro, player, countdown, RSVP, scroll reveals
 assets/img/           WebP images extracted from the Photoshop PDF (~1.2 MB total)
@@ -35,9 +35,12 @@ script uses that structure to:
   colour) and write it as **real text** (SVG `<text>`), so it's sharp on every screen;
 * paint out the static progress bar and countdown digits, which are now live HTML.
 
-Fonts: Times New Roman (built into iPhone/Mac/Windows; Android gets Tinos, which
-has identical metrics), Poppins (Google Fonts) and Verandah Reverie, served from
-`css/fonts.css`, where the build embeds it as a data URI (some hosts, and the
+Fonts: the body text uses "Invite Serif": the device's real Times New Roman where it
+exists (iPhone/Mac/Windows), otherwise Tinos (same metrics as Times, OFL licence),
+embedded in `css/fonts.css`. This matters on Android: there "Times New Roman" is
+silently swapped for Noto Serif, which is ~20% wider and made text spill out of the
+cards and frames (seen on a Galaxy S23). Poppins comes from Google Fonts and
+Verandah Reverie is also served from `css/fonts.css`, where the build embeds it as a data URI (some hosts, and the
 Claude preview, only allow inline or Google fonts). It's your full font, losslessly
 re-wrapped as WOFF2 (the font's metadata forbids subsetting). Its licence is
 personal use; a commercial/web licence is available at mansgreback.com.
@@ -84,9 +87,13 @@ How the page sends answers, and why (two steps):
    Google login. Browsers signed into several Google accounts, or into a work account, can
    get a Google error page instead of the reply. The page then resends the same answer
    with no cookies, exactly like an incognito window, in `no-cors` mode. It can't hit
-   CORS, but Google's reply can't be read, so this path is unconfirmed. In the rare case
-   where step 1 saved but its reply was blocked, you may see a duplicate row with the
-   same name a second apart.
+   CORS, but Google's reply can't be read, so this path is unconfirmed.
+
+Both steps carry the same **id**, created once per tap on "Enviar". If step 1 saved but
+its reply was lost (Apps Script can take several seconds to wake up after being idle,
+and the page waits up to 15 s), the resend is recognised and not saved again: no
+duplicate rows. A guest who uses "Cambiar respuesta" gets a new id, so their new answer
+is added as a new row (the latest row is their current answer).
 
 **Diagnose any device (phones included):** open the page with **`?debug`**, e.g.
 `…/invitacion-boda-isaias-y-nicole/?debug`. A panel shows the code version the device
@@ -213,7 +220,7 @@ What the snippet does, and why:
 |---|---|
 | `…isaias-y-nicole` → 301 → `…isaias-y-nicole/` | the page uses relative links (`css/…`, `assets/…`); without the final `/` the browser would look for them one folder up and the page would load unstyled |
 | `root /var/www/hsoul-ink` + `try_files` | serve the files; anything missing is a clean 404 |
-| gzip for CSS/JS | `css/fonts.css` holds the embedded script font: 64 KB → 48 KB |
+| gzip for CSS/JS | `css/fonts.css` holds the embedded fonts: ~130 KB → ~100 KB |
 | HTML/CSS/JS `Cache-Control: no-cache` | file names don't change between updates, so browsers revalidate (a cheap 304) and guests always get the latest version |
 | images/song cached 1 day | they rarely change; after replacing one, guests see it within a day (or on a hard refresh) |
 | `deny` for `tools/`, `design/`, `deploy/`, dotfiles | in case they're ever uploaded by mistake |
